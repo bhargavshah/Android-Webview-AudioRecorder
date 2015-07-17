@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder Web Page</title>
+    <script src="jquery.js"></script>
+</head>
+
+<body onload="loaded()">
+<header>
+    Audio Recorder
+</header>
+
+
+<button id="recBtn" type="button" onclick="recHandler()">Record</button>
+<button id="stopBtn" type="button" onclick="stopHandler()">Stop</button>
+<!--<button id="playBtn" type="button" onclick="playHandler()">Play</button>-->
+
+<audio controls>
+ <source id="apsrc" type="audio/mp4">
+</audio>
+<script>
+    $(document).ready(function() {
+        $('#stopBtn').attr('disabled', true);
+        $('#playBtn').attr('disabled', true);
+    });
+
+    function recHandler(e) {
+        Audio.initialize();
+        Audio.record();
+        $('#recBtn').attr('disabled', true);
+        $('#stopBtn').removeAttr('disabled');
+    }
+    function stopHandler(e) {
+        Audio.stop();
+        $('#stopBtn').attr('disabled', true);
+        $('#playBtn').removeAttr('disabled');
+        $('#apsrc').attr('src',Audio.getDataURL());
+    }
+    //function playHandler(e) {
+    //    Audio.play();
+    //    $('#recBtn').removeAttr('disabled');
+    //}
+
+
+</script>
+</body>
+
+</html>
