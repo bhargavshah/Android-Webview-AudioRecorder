@@ -23,6 +23,11 @@ public class AudioRecorder {
         mContext = c;
     }
 
+    /**********************************************************
+     *              public API methods
+     *********************************************************/
+
+
     @JavascriptInterface
     public void initialize(String fileName) {
         outputFile = getFullPath(fileName);
@@ -105,6 +110,10 @@ public class AudioRecorder {
         File file = new File(fullPath);
         file.delete();
     }
+
+    /*******************************************************************
+    *                       Private Utilities
+    * *****************************************************************/
 
     private byte[] loadFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);

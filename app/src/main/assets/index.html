@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Audio Recorder Web Page</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
     <script src="jquery.js"></script>
 </head>
 
 <body onload="loaded()">
-<header>
-    Audio Recorder
-</header>
+<div class='container' style='max-width:55%;'>
+
+    <div class='header clearfix'>
+        <h2>Audio Recording on WebView</h2>
+    </div>
 
 
-<button id="recBtn" type="button" onclick="recHandler()">Record</button>
-<button id="stopBtn" type="button" onclick="stopHandler()">Stop</button>
-<!--<button id="playBtn" type="button" onclick="playHandler()">Play</button>-->
 
-<audio id="ap" controls>
-</audio>
+    <div class="jumbotron">
+
+        <div>
+            <p>
+                <button id="recBtn" type="button" onclick="recHandler()">Record</button>
+                <button id="stopBtn" type="button" onclick="stopHandler()">Stop</button>
+            </p>
+        </div>
+
+        <p></p>
+
+        <audio id="ap" controls/>
+    </div>
+
+</div>
 <script>
 
     var name = 'recording.m4a';
