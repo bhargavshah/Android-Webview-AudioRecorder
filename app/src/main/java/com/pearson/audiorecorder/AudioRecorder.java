@@ -3,15 +3,13 @@ package com.pearson.audiorecorder;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Environment;
-import android.webkit.JavascriptInterface;
 import android.util.Base64;
+import android.webkit.JavascriptInterface;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-
-import com.pearson.audiorecorder.IOUtils;
+import java.io.InputStream;
 
 /**
  * Created by P7109048 on 16-07-2015.
@@ -26,8 +24,8 @@ public class AudioRecorder {
     }
 
     @JavascriptInterface
-    public void initialize() {
-        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.m4a";
+    public void initialize(String fileName) {
+        outputFile = getFullPath(fileName);
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -88,15 +86,51 @@ public class AudioRecorder {
     }
 
     @JavascriptInterface
-    public String getDataURL() {
-        String dataURL = "";
+    public String getBase64(String fileName) {
+        String b64 = "";
         try {
-            byte[] byteArr = IOUtils.readFile(outputFile);
-            String b64 = Base64.encodeToString(byteArr, 0);
-            dataURL = "data:audio/x-m4a;base64," + b64;
+            File file = new File(getFullPath(fileName));
+            byte[] bytes = loadFile(file);
+            b64 = Base64.encodeToString(bytes, 0);
+//            dataURL = "data:audio/x-m4a;base64," + b64;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return dataURL;
+        return b64;
+    }
+
+    @JavascriptInterface
+    public void deleteFile(String fileName) {
+        String fullPath = getFullPath(fileName);
+        File file = new File(fullPath);
+        file.delete();
+    }
+
+    private byte[] loadFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+
+        long length = file.length();
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+        }
+        byte[] bytes = new byte[(int)length];
+
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+                && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+
+        is.close();
+        return bytes;
+    }
+
+    private String getFullPath(String fileName) {
+        return "/data/data/" + mContext.getPackageName() + "/" + fileName;
     }
 }

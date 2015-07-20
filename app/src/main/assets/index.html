@@ -16,17 +16,18 @@
 <button id="stopBtn" type="button" onclick="stopHandler()">Stop</button>
 <!--<button id="playBtn" type="button" onclick="playHandler()">Play</button>-->
 
-<audio controls>
- <source id="apsrc" type="audio/mp4">
+<audio id="ap" controls>
 </audio>
 <script>
+
+    var name = 'recording.m4a';
     $(document).ready(function() {
         $('#stopBtn').attr('disabled', true);
         $('#playBtn').attr('disabled', true);
     });
 
     function recHandler(e) {
-        Audio.initialize();
+        Audio.initialize(name);
         Audio.record();
         $('#recBtn').attr('disabled', true);
         $('#stopBtn').removeAttr('disabled');
@@ -35,7 +36,10 @@
         Audio.stop();
         $('#stopBtn').attr('disabled', true);
         $('#playBtn').removeAttr('disabled');
-        $('#apsrc').attr('src',Audio.getDataURL());
+        var base64 = Audio.getBase64(name);
+        var dataURL = "data:audio/x-m4a;base64," + base64;
+        $('#ap').append("<source src='" + dataURL + "' type='audio/mp4'>");
+        Audio.deleteFile(name);
     }
     //function playHandler(e) {
     //    Audio.play();
